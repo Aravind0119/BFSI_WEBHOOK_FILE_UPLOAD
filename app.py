@@ -410,6 +410,9 @@ function updateFileList() {
 def upload():
     global stored_data
 
+    # 🔴 CLEAR PREVIOUS DATA
+    stored_data = {}
+
     files = request.files.getlist("file")
 
     for file in files:
@@ -428,7 +431,9 @@ def upload():
                 stored_data[filename] = df.to_dict(orient="records")
 
             elif filename.endswith(".txt"):
-                stored_data[filename] = {"text": file.read().decode("utf-8", errors="ignore")}
+                stored_data[filename] = {
+                    "text": file.read().decode("utf-8", errors="ignore")
+                }
 
             elif filename.endswith(".xml"):
                 tree = ET.parse(file)
@@ -454,6 +459,8 @@ def upload():
     <a href='/'>Back</a> | <a href='/webhook'>View JSON</a>
     </div>
     """
+
+
 
 # -----------------------------
 # JSON Viewer
@@ -481,4 +488,5 @@ def webhook():
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
+
 
